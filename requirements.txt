@@ -1,4 +1,8 @@
+
 Django>=5.2,<5.3
 Pillow>=10.0
-
 agora-token-builder>=1.0.0
+gunicorn
+whitenoise
+dj-database-url
+psycopg2-binary
