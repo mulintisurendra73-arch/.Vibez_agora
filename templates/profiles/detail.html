@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}{{ profile_user.first_name|default:profile_user.username }} · .Vibez{% endblock %}
+{% block content %}
+<section class="auth-wrap"><div class="auth-card profile-card">
+  <div class="profile-avatar">{% if profile.avatar %}<img src="{{ profile.avatar.url }}" alt="{{ profile_user.username }} profile picture">{% else %}{{ profile_user.first_name|default:profile_user.username|first|upper }}{% endif %}</div>
+  <p class="eyebrow">.VIBEZ MEMBER{% if profile.is_private %} · PRIVATE PROFILE{% endif %}</p><h1>{{ profile_user.first_name|default:profile_user.username }}</h1><p class="muted">@{{ profile_user.username }}</p>
+  {% if can_view_profile %}
+  <div class="profile-stats"><div><strong>{{ profile.follower_count }}</strong><span>Followers</span></div><div><strong>{{ profile.following_count }}</strong><span>Following</span></div></div>
+  <p class="profile-bio">{{ profile.bio|default:"This member hasn't added a bio yet." }}</p>
+  {% if is_own_profile %}<a class="btn btn-primary" href="{% url 'edit_profile' %}">Edit profile & privacy</a>{% else %}
+    {% if not is_blocked and not is_blocked_by %}<form method="post" action="{% url 'toggle_follow' profile_user.username %}">{% csrf_token %}<button class="btn btn-primary" type="submit">{% if is_following %}Unfollow{% else %}Follow{% endif %}</button></form>{% endif %}
+  {% endif %}
+  {% else %}<p class="profile-bio">This profile is private. Follow this member to see their profile details.</p>{% endif %}
+  {% if not is_own_profile %}<div class="profile-safety-actions">
+    <form method="post" action="{% url 'toggle_block' profile_user.username %}">{% csrf_token %}<button class="btn btn-quiet" type="submit">{% if is_blocked %}Unblock{% else %}Block user{% endif %}</button></form>
+    <details><summary class="safety-summary">Report user</summary><form method="post" action="{% url 'report_user' profile_user.username %}" class="report-form">{% csrf_token %}<label for="id_reason">Reason</label><select name="reason" id="id_reason" required><option value="">Choose a reason</option><option value="spam">Spam</option><option value="harassment">Harassment or bullying</option><option value="inappropriate">Inappropriate content</option><option value="impersonation">Impersonation</option><option value="other">Other</option></select><label for="id_details">Details (optional)</label><textarea name="details" id="id_details" rows="3" maxlength="1000"></textarea><button class="btn btn-primary" type="submit">Submit report</button></form></details>
+  </div>{% endif %}
+</div></section>
+{% endblock %}

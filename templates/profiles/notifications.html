@@ -1,0 +1,3 @@
+{% extends "base.html" %}
+{% block title %}Notifications · .Vibez{% endblock %}
+{% block content %}<section class="section-shell"><div class="section-heading"><p class="eyebrow">YOUR UPDATES</p><h1>Notifications</h1><p class="muted">Follow activity and updates from your .Vibez community.</p></div><div class="room-grid">{% for item in notifications %}<article class="room-card"><p>{{ item.message }}</p><p class="muted">{{ item.created_at|date:"M j, Y · g:i a" }}</p>{% if item.target_url %}<a class="btn btn-quiet" href="{{ item.target_url }}">View profile</a>{% endif %}</article>{% empty %}<div class="empty-state"><h2>You're all caught up</h2><p>No notifications yet. Follow people to start building your community.</p></div>{% endfor %}</div></section>{% endblock %}

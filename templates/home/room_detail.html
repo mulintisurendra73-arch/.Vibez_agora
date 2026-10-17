@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+{% block title %}{{ room.title }} · .Vibez{% endblock %}
+{% block content %}
+<section class="auth-wrap auth-single">
+  <div class="auth-card room-detail-card room-phase6">
+    <div class="eyebrow"><span class="live-dot"></span> ROOM {% if room.status == 'open' %}OPEN{% else %}CLOSED{% endif %}</div>
+    <h1>{{ room.title }}</h1>
+    <p class="muted">Hosted by <a href="{% url 'public_profile' room.host.username %}">@{{ room.host.username }}</a></p>
+    {% if room.topic %}<p class="topic-pill">{{ room.topic }}</p>{% endif %}
+    <p>{{ room.description|default:"No description yet. Say hello and get the conversation started." }}</p>
+
+    <div class="profile-stats room-stats">
+      <div><strong>{{ room.listener_count }}</strong><span>People in room</span></div>
+      <div class="stat"><strong>∞</strong><span>Unlimited listeners</span></div>
+      <div><strong>{{ occupied_seat_count }}/8</strong><span>Talking seats occupied</span></div>
+    </div>
+
+    {% if user.is_authenticated %}
+      {% if is_member %}
+        <p class="success-note">You're in this room. You can listen or take an available talking seat.</p>
+        <form method="post" action="{% url 'leave_room' room.id %}">{% csrf_token %}<button class="btn btn-quiet" type="submit">Leave room</button></form>
+      {% elif room.status == 'open' %}
+        <form method="post" action="{% url 'join_room' room.id %}">{% csrf_token %}<button class="btn btn-primary" type="submit">Join as listener</button></form>
+      {% else %}
+        <p>This room is closed and cannot be joined.</p>
+      {% endif %}
+    {% else %}
+      <p><a class="btn btn-primary" href="{% url 'login' %}">Log in to join the room</a></p>
+    {% endif %}
+
+    <section class="talking-seats" aria-labelledby="seats-heading">
+      <div class="seats-heading">
+        <div><div class="eyebrow">THE STAGE</div><h2 id="seats-heading">🎙️ Talking seats</h2></div>
+        <span class="seat-counter">{{ occupied_seat_count }} of 8 occupied</span>
+      </div>
+      <p class="muted">Choose an open seat to join the stage. Everyone else can listen.</p>
+      <div class="seat-grid">
+        {% for seat in seats %}
+          <article class="seat-card {% if seat.member %}seat-occupied{% else %}seat-open{% endif %}">
+            <div class="seat-icon" aria-hidden="true">{% if seat.member %}🎤{% else %}＋{% endif %}</div>
+            <h3>Seat {{ seat.number }}</h3>
+            {% if seat.member %}
+              <p class="seat-username">@{{ seat.member.user.username }}</p>
+              <span class="seat-status">{% if seat.member.is_muted %}Muted{% else %}On stage{% endif %}</span>
+              {% if user.is_authenticated and seat.member.user_id == user.id %}
+                <form method="post" action="{% url 'leave_seat' room.id %}">{% csrf_token %}<button class="btn btn-quiet seat-button" type="submit">Leave seat</button></form>
+              {% elif is_host and seat.member.user_id != room.host_id %}
+                <form method="post" action="{% url 'set_member_role' room.id seat.member.user_id %}">{% csrf_token %}<input type="hidden" name="role" value="listener"><button class="btn btn-quiet seat-button" type="submit">Move to listeners</button></form>
+              {% endif %}
+            {% else %}
+              <p class="seat-status">Available</p>
+              {% if user.is_authenticated and room.status == 'open' %}
+                <form method="post" action="{% url 'join_seat' room.id seat.number %}">{% csrf_token %}<button class="btn btn-primary seat-button" type="submit">Join seat</button></form>
+              {% else %}
+                <span class="seat-hint">Open seat</span>
+              {% endif %}
+            {% endif %}
+          </article>
+        {% endfor %}
+      </div>
+      <section class="agora-audio-panel" aria-labelledby="audio-heading" style="margin-top:1.25rem;padding:1rem;border:1px solid rgba(140,140,170,.35);border-radius:14px;">
+        <h3 id="audio-heading">🔊 Live room audio</h3>
+        {% if is_member and room.status == 'open' %}
+          <p id="agora-audio-status" role="status" aria-live="polite">Ready to connect to live audio.</p>
+          <div style="display:flex;gap:.6rem;flex-wrap:wrap;">
+            <button class="btn btn-primary" type="button" id="agora-join-button">Join audio</button>
+            <button class="btn btn-quiet" type="button" id="agora-leave-button" disabled>Leave audio</button>
+            <button class="btn btn-quiet" type="button" id="agora-mic-button" disabled>Mute microphone</button>
+          </div>
+          <p class="muted" id="agora-audio-help">Listeners can hear the room. Only members occupying a talking seat and not muted by the host can publish microphone audio. Allow microphone access when prompted.</p>
+          <div id="agora-remote-audio" hidden></div>
+        {% elif not user.is_authenticated %}
+          <p>Log in and join this room to listen to live audio.</p>
+        {% else %}
+          <p>This room is closed, so live audio is unavailable.</p>
+        {% endif %}
+      </section>
+      {% if is_member and room.status == 'open' %}
+        <script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.23.4.js"></script>
+        <script>
+        (() => {
+          const joinButton = document.getElementById('agora-join-button');
+          const leaveButton = document.getElementById('agora-leave-button');
+          const micButton = document.getElementById('agora-mic-button');
+          const statusEl = document.getElementById('agora-audio-status');
+          if (!joinButton || !window.AgoraRTC) { if (statusEl) statusEl.textContent = 'Agora SDK could not load. Check your internet connection and reload.'; return; }
+          let client = null, localAudioTrack = null, joined = false, canPublish = false, mutedByHost = false;
+          const tokenUrl = "{% url 'agora_token' room.id %}";
+          function status(message) { statusEl.textContent = message; }
+          async function getCredentials() {
+            const response = await fetch(tokenUrl, {credentials: 'same-origin', headers: {'Accept':'application/json'}});
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.error || 'Could not obtain Agora token.');
+            return data;
+          }
+          async function updatePermission() {
+            if (!joined) return;
+            try {
+              const data = await getCredentials();
+              const allowed = Boolean(data.canPublish);
+              mutedByHost = Boolean(data.isMuted);
+              if (allowed && !canPublish) {
+                canPublish = true;
+                if (!localAudioTrack) localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
+                await client.publish(localAudioTrack);
+                micButton.disabled = false; micButton.textContent = localAudioTrack.enabled ? 'Mute microphone' : 'Unmute microphone';
+                status('Connected. Your talking seat can publish audio.');
+              } else if (!allowed && canPublish) {
+                canPublish = false;
+                if (localAudioTrack) { await client.unpublish(localAudioTrack).catch(()=>{}); localAudioTrack.close(); localAudioTrack = null; }
+                micButton.disabled = true; micButton.textContent = 'Microphone unavailable';
+                status(mutedByHost ? 'Connected as listener. The host has muted your microphone.' : 'Connected as listener. Join an available talking seat to speak.');
+              } else if (!allowed) {
+                micButton.disabled = true;
+                status(mutedByHost ? 'Connected as listener. The host has muted your microphone.' : 'Connected as listener. Join a talking seat to speak.');
+              }
+            } catch (error) { status(error.message || 'Could not refresh microphone permission.'); }
+          }
+          joinButton.addEventListener('click', async () => {
+            joinButton.disabled = true; status('Connecting to live audio…');
+            try {
+              const data = await getCredentials();
+              client = AgoraRTC.createClient({mode:'rtc', codec:'vp8'});
+              client.on('user-published', async (user, mediaType) => {
+                await client.subscribe(user, mediaType);
+                if (mediaType === 'audio') user.audioTrack.play();
+              });
+              client.on('user-unpublished', (user) => { if (user.audioTrack) user.audioTrack.stop(); });
+              await client.join(data.appId, data.channelName, data.token, data.uid);
+              joined = true; canPublish = false;
+              leaveButton.disabled = false;
+              await updatePermission();
+              if (!data.canPublish) status(data.isMuted ? 'Connected as listener. The host has muted your microphone.' : 'Connected as listener. Join a talking seat to speak.');
+              window.__vibezAgoraPermissionTimer = window.setInterval(updatePermission, 5000);
+            } catch (error) {
+              status(error.message || 'Could not connect. Check Agora credentials and microphone permissions.');
+              if (client && joined) await client.leave().catch(()=>{});
+              joined = false; joinButton.disabled = false; leaveButton.disabled = true;
+            }
+          });
+          leaveButton.addEventListener('click', async () => {
+            if (window.__vibezAgoraPermissionTimer) clearInterval(window.__vibezAgoraPermissionTimer);
+            if (localAudioTrack) { if (client) await client.unpublish(localAudioTrack).catch(()=>{}); localAudioTrack.close(); localAudioTrack = null; }
+            if (client && joined) await client.leave().catch(()=>{});
+            client = null; joined = false; canPublish = false;
+            joinButton.disabled = false; leaveButton.disabled = true; micButton.disabled = true; micButton.textContent = 'Mute microphone';
+            status('You left live audio.');
+          });
+          micButton.addEventListener('click', async () => {
+            if (!localAudioTrack || !canPublish || mutedByHost) return;
+            try { await localAudioTrack.setEnabled(!localAudioTrack.enabled); micButton.textContent = localAudioTrack.enabled ? 'Mute microphone' : 'Unmute microphone'; status(localAudioTrack.enabled ? 'Your microphone is on.' : 'Your microphone is muted.'); }
+            catch (error) { status('Could not change microphone state.'); }
+          });
+          window.addEventListener('beforeunload', () => { if (localAudioTrack) localAudioTrack.close(); if (client && joined) client.leave(); });
+        })();
+        </script>
+      {% endif %}
+    </section>
+
+    {% if is_host %}
+      <hr><h2>Host controls</h2>
+      {% if room.status == 'open' %}
+        <form method="post" action="{% url 'close_room' room.id %}">{% csrf_token %}<button class="btn btn-quiet" type="submit">Close room</button></form>
+      {% else %}
+        <form method="post" action="{% url 'reopen_room' room.id %}">{% csrf_token %}<button class="btn btn-primary" type="submit">Reopen room</button></form>
+      {% endif %}
+      <h3>Listeners and speaker controls</h3>
+      <ul class="room-member-list">
+        {% for member in members %}
+          <li>
+            <span>@{{ member.user.username }} — {{ member.get_role_display }}{% if member.seat_number %} · Seat {{ member.seat_number }}{% endif %}{% if member.is_muted %} · muted{% endif %}</span>
+            {% if member.user_id != room.host_id %}
+              <form method="post" action="{% url 'set_member_role' room.id member.user_id %}">{% csrf_token %}
+                <input type="hidden" name="role" value="{% if member.seat_number %}listener{% else %}speaker{% endif %}">
+                <button class="btn btn-quiet" type="submit">{% if member.seat_number %}Make listener{% else %}Invite to stage{% endif %}</button>
+              </form>
+              {% if member.seat_number %}
+                <form method="post" action="{% url 'toggle_member_mute' room.id member.user_id %}">{% csrf_token %}<button class="btn btn-quiet" type="submit">{% if member.is_muted %}Unmute{% else %}Mute{% endif %}</button></form>
+              {% endif %}
+            {% endif %}
+          </li>
+        {% empty %}<li>No members yet.</li>{% endfor %}
+      </ul>
+    {% endif %}
+    <p><a class="text-link" href="{% url 'rooms' %}">← Back to all rooms</a></p>
+  </div>
+</section>
+{% endblock %}
