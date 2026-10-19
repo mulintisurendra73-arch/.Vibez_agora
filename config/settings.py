@@ -103,3 +103,21 @@ AGORA_APP_ID = os.getenv("AGORA_APP_ID", "").strip()
 AGORA_APP_CERTIFICATE = os.getenv(
     "AGORA_APP_CERTIFICATE", ""
 ).strip()
+
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "loggers": {
+        "django.request": {
+            "handlers": ["console"],
+            "level": "ERROR",
+            "propagate": False,
+        },
+    },
+}
