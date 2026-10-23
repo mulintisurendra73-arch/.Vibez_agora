@@ -10,6 +10,8 @@ from profiles.models import Follow, Block
 from .forms import RoomForm
 from .models import Room, RoomMembership
 
+from home.firebase_service import publish_room
+
 User = get_user_model()
 SEAT_COUNT = 8
 
@@ -74,9 +76,21 @@ def create_room(request):
             user=request.user,
             defaults={"role": RoomMembership.Role.HOST},
         )
+        
+        try:
+          publish_room(room)
+        except Exception:
+           import logging
+        logging.getLogger(__name__).exception(
+            "Failed to publish room to Firebase"
+        )
+
+
         messages.success(request, "Your room is live. Invite people to join the conversation!")
         return redirect("room_detail", room_id=room.pk)
     return render(request, "home/room_form.html", {"form": form})
+
+
 
 
 def room_detail(request, room_id):
