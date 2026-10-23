@@ -1,3 +1,4 @@
+import logging
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
@@ -34,36 +35,14 @@ def edit_profile(request):
         try:
             publish_user(request.user)
 
-            from config.firebase_db import firebase_reference
-
             firebase_reference(
-              f"users/{request.user.pk}"
+                f"users/{request.user.pk}"
             ).update({
-            "bio": profile.bio or "",
+                "bio": profile.bio or "",
             })
 
         except Exception:
-           import logging
-        logging.getLogger(__name__).exception(
-         "Could not sync updated profile to Firebase."
-        )
-
-        try:
-            firebase_data = {
-                "user_id": str(request.user.pk),
-                "username": request.user.get_username(),
-                "display_name": (
-                    request.user.get_full_name().strip()
-                    or request.user.get_username()
-                ),
-                "bio": profile.bio or "",
-            }
-            firebase_reference(
-                f"users/{request.user.pk}"
-            ).update(firebase_data)
-
-        except Exception:
-            import logging
+        
             logging.getLogger(__name__).exception(
                 "Could not sync updated profile to Firebase."
             )
