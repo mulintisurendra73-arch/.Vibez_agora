@@ -7,6 +7,7 @@ from django.views.decorators.http import require_POST
 from .forms import ProfileEditForm, UserReportForm
 from .models import Profile, Follow, Block, UserReport, Notification
 from config.firebase_db import firebase_reference
+from home.firebase_users import publish_user
 
 User = get_user_model()
 
@@ -28,7 +29,24 @@ def edit_profile(request):
     )
 
     if request.method == "POST" and form.is_valid():
-        form.save()
+        profile = form.save()
+
+        try:
+            publish_user(request.user)
+
+            from config.firebase_db import firebase_reference
+
+            firebase_reference(
+              f"users/{request.user.pk}"
+            ).update({
+            "bio": profile.bio or "",
+            })
+
+        except Exception:
+           import logging
+        logging.getLogger(__name__).exception(
+         "Could not sync updated profile to Firebase."
+        )
 
         try:
             firebase_data = {
