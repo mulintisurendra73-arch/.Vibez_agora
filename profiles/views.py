@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 from .forms import ProfileEditForm, UserReportForm
 from .models import Profile, Follow, Block, UserReport, Notification
+from config.firebase_db import firebase_reference
 
 User = get_user_model()
 
@@ -14,15 +15,53 @@ def my_profile(request):
     profile, _ = Profile.objects.get_or_create(user=request.user)
     return render(request, "profiles/detail.html", {"profile_user": request.user, "profile": profile, "is_own_profile": True, "is_following": False, "is_blocked": False, "is_blocked_by": False, "can_view_profile": True})
 
+
 @login_required
 def edit_profile(request):
     profile, _ = Profile.objects.get_or_create(user=request.user)
-    form = ProfileEditForm(request.POST or None, request.FILES or None, instance=profile, user=request.user)
+
+    form = ProfileEditForm(
+        request.POST or None,
+        request.FILES or None,
+        instance=profile,
+        user=request.user,
+    )
+
     if request.method == "POST" and form.is_valid():
         form.save()
-        messages.success(request, "Your .Vibez profile and privacy settings have been updated.")
+
+        try:
+            firebase_data = {
+                "user_id": str(request.user.pk),
+                "username": request.user.get_username(),
+                "display_name": (
+                    request.user.get_full_name().strip()
+                    or request.user.get_username()
+                ),
+                "bio": profile.bio or "",
+            }
+            firebase_reference(
+                f"users/{request.user.pk}"
+            ).update(firebase_data)
+
+        except Exception:
+            import logging
+            logging.getLogger(__name__).exception(
+                "Could not sync updated profile to Firebase."
+            )
+
+        messages.success(
+            request,
+            "Your .Vibez profile and privacy settings have been updated."
+        )
         return redirect("my_profile")
-    return render(request, "profiles/edit.html", {"form": form})
+
+    return render(
+        request,
+        "profiles/edit.html",
+        {"form": form},
+    )
+
 
 @login_required
 def public_profile(request, username):
