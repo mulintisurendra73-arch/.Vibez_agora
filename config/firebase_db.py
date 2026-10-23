@@ -15,11 +15,20 @@ def get_firebase_app():
     if _app is not None:
         return _app
 
+    
     project_root = Path(settings.BASE_DIR)
+
     credentials_path = os.getenv(
+    "FIREBASE_CREDENTIALS_PATH",
+    "secrets/firebase-service-account.json",
+     )
+
+    if os.getenv("RENDER"):
+        credentials_path = os.getenv(
         "FIREBASE_CREDENTIALS_PATH",
-        "secrets/firebase-service-account.json",
-    )
+        "/etc/secrets/firebase-service-account.json",
+        )
+
 
     credentials_path = Path(credentials_path)
     if not credentials_path.is_absolute():
