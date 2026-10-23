@@ -19,10 +19,10 @@ def register_view(request):
             "Could not sync the new user to Firebase."
         )
 
-    messages.success(
+        messages.success(
         request,
         "Your account is ready. You can sign in now."
     )
-    return redirect("login")
+        return redirect("login")
 
     return render(request, "accounts/register.html", {"form": form})
