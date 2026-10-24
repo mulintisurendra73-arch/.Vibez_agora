@@ -1,104 +1,320 @@
 
 {% load static %}
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <meta name="theme-color" content="#101019">
-    <meta name="color-scheme" content="dark">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>{% block title %}.VibeZ — Find your people{% endblock %}</title>
-
-    <meta name="description" content=".VibeZ — Find your people, join conversations, and enjoy live social audio rooms.">
+    <title>{% block title %}.VibeZ — Your community{% endblock %}</title>
+    <meta name="theme-color" content="#100b20">
+    <meta name="description" content=".VibeZ — Connect, chat, and discover your community.">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="{% static 'css/site.css' %}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body.vibez-cartoon-theme {
+            margin: 0;
+            min-height: 100vh;
+            background-color: #100b20;
+            color: #fff;
+            font-family: Inter, sans-serif;
+        }
+
+        /* Header */
+        .vibez-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 10px 18px;
+            background: rgba(16, 11, 32, 0.96);
+            border-bottom: 1px solid rgba(168, 117, 255, 0.35);
+            backdrop-filter: blur(14px);
+        }
+
+        .cartoon-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            flex-shrink: 0;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        /* Circular logo image */
+        .cartoon-brand-mark {
+            display: inline-block;
+            width: 46px;
+            height: 46px;
+            min-width: 46px;
+            aspect-ratio: 1 / 1;
+            overflow: hidden;
+            border: 2px solid #ff4fa3;
+            border-radius: 50%;
+            background-image: url("{% static 'images/logo.jpg' %}");
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            box-shadow: 0 0 14px rgba(255, 79, 163, 0.35);
+        }
+
+        .brand-mascot {
+            display: none;
+        }
+
+        .brand-wordmark {
+            color: #fff;
+            font-size: 20px;
+            font-weight: 900;
+            white-space: nowrap;
+            text-shadow: 0 0 12px rgba(168, 117, 255, 0.4);
+        }
+
+        .desktop-nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        .desktop-nav a,
+        .header-actions a {
+            color: #f7f2ff;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .desktop-nav a:hover,
+        .header-actions a:hover {
+            color: #ff75ba;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .header-actions .notification-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 9px 12px;
+            border: 1px solid rgba(168, 117, 255, 0.4);
+            border-radius: 999px;
+            background: rgba(168, 117, 255, 0.12);
+        }
+
+        .header-actions .auth-link {
+            padding: 9px 13px;
+            border-radius: 999px;
+            background: linear-gradient(110deg, #8d55ff, #ff4fa3);
+            color: #fff;
+        }
+
+        /* Django messages */
+        .vibez-messages {
+            position: relative;
+            z-index: 10;
+            width: min(900px, calc(100% - 28px));
+            margin: 14px auto;
+        }
+
+        .vibez-message {
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border: 1px solid rgba(168, 117, 255, 0.45);
+            border-radius: 12px;
+            background: rgba(30, 18, 51, 0.95);
+            color: #fff;
+        }
+
+        /* Main page */
+        .vibez-main {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            min-height: 70vh;
+        }
+
+        /* Five-button mobile navigation */
+        .mobile-bottom-nav {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .vibez-header {
+                padding: 9px 12px;
+                gap: 8px;
+            }
+
+            .cartoon-brand {
+                gap: 7px;
+            }
+
+            .cartoon-brand-mark {
+                width: 38px;
+                height: 38px;
+                min-width: 38px;
+            }
+
+            .brand-wordmark {
+                font-size: 17px;
+            }
+
+            .desktop-nav {
+                display: none;
+            }
+
+            .header-actions {
+                gap: 6px;
+            }
+
+            .header-actions a {
+                font-size: 11px;
+            }
+
+            .header-actions .notification-link {
+                padding: 8px 9px;
+            }
+
+            .vibez-main {
+                padding-bottom: 82px;
+            }
+
+            .mobile-bottom-nav {
+                position: fixed;
+                z-index: 2000;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                display: flex;
+                align-items: center;
+                justify-content: space-around;
+                gap: 2px;
+                padding: 8px 4px calc(8px + env(safe-area-inset-bottom));
+                background: rgba(15, 8, 30, 0.98);
+                border-top: 1px solid rgba(168, 117, 255, 0.4);
+                backdrop-filter: blur(16px);
+            }
+
+            .mobile-bottom-nav a {
+                display: flex;
+                flex: 1;
+                min-width: 0;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 4px;
+                color: #eee5ff;
+                text-decoration: none;
+                font-size: 19px;
+                line-height: 1.1;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            .mobile-bottom-nav a span {
+                display: block;
+            }
+
+            .mobile-bottom-nav a small {
+                font-family: Inter, sans-serif;
+                font-size: 9px;
+                font-weight: 500;
+                white-space: nowrap;
+            }
+
+            .mobile-bottom-nav a:hover,
+            .mobile-bottom-nav a:focus-visible {
+                color: #ff75ba;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .brand-wordmark {
+                font-size: 15px;
+            }
+
+            .mobile-bottom-nav a {
+                font-size: 17px;
+            }
+
+            .mobile-bottom-nav a small {
+                font-size: 8px;
+            }
+
+            .header-actions .notification-link {
+                padding: 7px;
+            }
+        }
+    </style>
 </head>
 
 <body class="vibez-cartoon-theme">
 
-    <!-- Decorative cartoon-inspired background -->
+    <!-- Decorative background -->
     <div class="cartoon-background" aria-hidden="true">
-        <div class="cartoon-orbit cartoon-orbit-one"></div>
-        <div class="cartoon-orbit cartoon-orbit-two"></div>
-
-        <span class="cartoon-star cartoon-star-one">✦</span>
-        <span class="cartoon-star cartoon-star-two">✧</span>
-        <span class="cartoon-star cartoon-star-three">✦</span>
-        <span class="cartoon-star cartoon-star-four">✧</span>
-
-        <div class="cartoon-glow cartoon-glow-one"></div>
-        <div class="cartoon-glow cartoon-glow-two"></div>
+        <div class="cartoon-orbit"></div>
+        <div class="cartoon-star"></div>
+        <div class="cartoon-glow"></div>
     </div>
 
-    <!-- Main header -->
-    <header class="topbar">
+    <!-- Header -->
+    <header class="vibez-header">
 
-        <a class="brand cartoon-brand"
-           href="{% url 'home' %}"
-           aria-label=".VibeZ home">
-
-            <span class="brand-mark cartoon-brand-mark" aria-hidden="true">
-                <span class="brand-mascot">🐱</span>
-            </span>
-
-            <span class="brand-wordmark">
-                .Vibe<span class="brand-z">Z</span>
-            </span>
+        <a class="cartoon-brand" href="{% url 'home' %}" aria-label=".VibeZ home">
+            <span class="cartoon-brand-mark" aria-hidden="true"></span>
+            <span class="brand-wordmark">.VibeZ</span>
         </a>
 
+        <!-- Desktop navigation -->
         <nav class="desktop-nav" aria-label="Main navigation">
             <a href="{% url 'home' %}">Home</a>
             <a href="{% url 'discover' %}">Discover</a>
             <a href="{% url 'rooms' %}">Chatrooms</a>
 
             {% if user.is_authenticated %}
-                <a href="{% url 'notifications' %}">Notifications</a>
-                <a href="{% url 'my_profile' %}">My profile</a>
+                <a href="{% url 'my_profile' %}">Profile</a>
             {% endif %}
         </nav>
 
-        <div class="nav-actions">
+        <!-- Notifications stay in the header; no sign-out button here -->
+        <div class="header-actions">
             {% if user.is_authenticated %}
-
-                <span class="welcome">
-                    Hi, {{ user.first_name|default:user.username }}
-                </span>
-
-                <form method="post"
-                      action="{% url 'logout' %}"
-                      class="inline-form">
-                    {% csrf_token %}
-                    <button class="btn btn-quiet" type="submit">
-                        Sign out
-                    </button>
-                </form>
-
+                <a class="notification-link"
+                   href="{% url 'notifications' %}"
+                   aria-label="Notifications">
+                    <span aria-hidden="true">♧</span>
+                    <span>Notifications</span>
+                </a>
             {% else %}
-
-                <a class="btn btn-quiet login-link"
-                   href="{% url 'login' %}">
-                    Log in
-                </a>
-
-                <a class="btn btn-primary nav-join"
-                   href="{% url 'register' %}">
-                    Join free <span aria-hidden="true">↗</span>
-                </a>
-
+                <a href="{% url 'login' %}">Sign in</a>
+                <a class="auth-link" href="{% url 'register' %}">Join</a>
             {% endif %}
         </div>
     </header>
 
-    <!-- Django success and error messages -->
+    <!-- Django messages -->
     {% if messages %}
-        <div class="message-stack" aria-live="polite">
+        <div class="vibez-messages" aria-live="polite">
             {% for message in messages %}
-                <div class="message {{ message.tags }}">
+                <div class="vibez-message {{ message.tags }}">
                     {{ message }}
                 </div>
             {% endfor %}
@@ -106,126 +322,46 @@
     {% endif %}
 
     <!-- Page-specific content -->
-    <main class="app-main">
+    <main class="vibez-main">
         {% block content %}{% endblock %}
     </main>
 
-    <!-- Footer -->
-    <footer class="footer">
+    <!-- No shared footer -->
 
-        <a class="brand cartoon-brand footer-brand"
-           href="{% url 'home' %}"
-           aria-label=".VibeZ home">
-
-            <span class="brand-mark cartoon-brand-mark" aria-hidden="true">
-                <span class="brand-mascot">🐱</span>
-            </span>
-
-            <span class="brand-wordmark">
-                .Vibe<span class="brand-z">Z</span>
-            </span>
-        </a>
-
-        <span>Good conversations start here.</span>
-        <span>© {% now "Y" %} .VibeZ</span>
-    </footer>
-
-    <!-- Mobile bottom navigation -->
+    <!-- Mobile bottom navigation: exactly five buttons -->
     {% if user.is_authenticated %}
         <nav class="mobile-bottom-nav" aria-label="Mobile navigation">
 
-            <a class="mobile-nav-item"
-               href="{% url 'home' %}"
-               aria-label="Home"
-               title="Home">
-
-                <svg viewBox="0 0 24 24"
-                     aria-hidden="true"
-                     fill="none"
-                     stroke="currentColor"
-                     stroke-width="1.8"
-                     stroke-linecap="round"
-                     stroke-linejoin="round">
-                    <path d="m3 10 9-7 9 7"></path>
-                    <path d="M5 9v12h14V9"></path>
-                    <path d="M9 21v-7h6v7"></path>
-                </svg>
+            <a href="{% url 'home' %}" aria-label="Home">
+                <span aria-hidden="true">⌂</span>
+                <small>Home</small>
             </a>
 
-            <a class="mobile-nav-item"
-               href="{% url 'rooms' %}"
-               aria-label="Chatrooms"
-               title="Chatrooms">
-
-                <svg viewBox="0 0 24 24"
-                     aria-hidden="true"
-                     fill="none"
-                     stroke="currentColor"
-                     stroke-width="1.8"
-                     stroke-linecap="round"
-                     stroke-linejoin="round">
-                    <rect x="3" y="4" width="18" height="14" rx="3"></rect>
-                    <path d="M8 18 5 21"></path>
-                    <path d="M8 9h8M8 13h5"></path>
-                </svg>
+            <a href="{% url 'rooms' %}" aria-label="Chatrooms">
+                <span aria-hidden="true">🎙</span>
+                <small>Chatrooms</small>
             </a>
 
-            <!-- Existing Discover destination retained.
-                 Replace with the real messaging URL when implemented. -->
-            <a class="mobile-nav-item"
-               href="{% url 'discover' %}"
-               aria-label="Messages"
-               title="Messages">
-
-                <svg viewBox="0 0 24 24"
-                     aria-hidden="true"
-                     fill="none"
-                     stroke="currentColor"
-                     stroke-width="1.8"
-                     stroke-linecap="round"
-                     stroke-linejoin="round">
-                    <path d="M21 11.5a8.5 8.5 0 0 1-12.4 7.6L3 21l1.9-5.6A8.5 8.5 0 1 1 21 11.5Z"></path>
-                    <path d="M8 10h8M8 14h5"></path>
-                </svg>
+            <a href="{% url 'discover' %}" aria-label="Reels">
+                <span aria-hidden="true">▶</span>
+                <small>Reels</small>
             </a>
 
-            <a class="mobile-nav-item"
-               href="{% url 'notifications' %}"
-               aria-label="Notifications"
-               title="Notifications">
-
-                <svg viewBox="0 0 24 24"
-                     aria-hidden="true"
-                     fill="none"
-                     stroke="currentColor"
-                     stroke-width="1.8"
-                     stroke-linecap="round"
-                     stroke-linejoin="round">
-                    <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
-                    <path d="M10 21h4"></path>
-                </svg>
+            <a href="{% url 'discover' %}" aria-label="Messages">
+                <span aria-hidden="true">☏</span>
+                <small>Messages</small>
             </a>
 
-            <a class="mobile-nav-item"
-               href="{% url 'my_profile' %}"
-               aria-label="Profile"
-               title="Profile">
-
-                <svg viewBox="0 0 24 24"
-                     aria-hidden="true"
-                     fill="none"
-                     stroke="currentColor"
-                     stroke-width="1.8"
-                     stroke-linecap="round"
-                     stroke-linejoin="round">
-                    <circle cx="12" cy="8" r="4"></circle>
-                    <path d="M4 21a8 8 0 0 1 16 0"></path>
-                </svg>
+            <a href="{% url 'my_profile' %}" aria-label="Profile">
+                <span aria-hidden="true">♙</span>
+                <small>Profile</small>
             </a>
 
         </nav>
     {% endif %}
 
-    <script src="{% static 'js/site.js' %}" defer></script>
+    <script src="{% static 'js/site.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+
 </body>
 </html>
