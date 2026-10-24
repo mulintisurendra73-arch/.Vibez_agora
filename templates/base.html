@@ -54,21 +54,25 @@
         }
 
         /* Circular logo image */
-        .cartoon-brand-mark {
-            display: inline-block;
-            width: 46px;
-            height: 46px;
-            min-width: 46px;
-            aspect-ratio: 1 / 1;
-            overflow: hidden;
-            border: 2px solid #ff4fa3;
-            border-radius: 50%;
-            background-image: url("{% static 'images/logo.jpg' %}");
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: cover;
-            box-shadow: 0 0 14px rgba(255, 79, 163, 0.35);
-        }
+       
+           
+    .cartoon-brand-mark {
+     display: block;
+     width: 48px !important;
+    height: 48px !important;
+    min-width: 48px !important;
+    min-height: 48px !important;
+    flex: 0 0 48px;
+    aspect-ratio: 1 / 1;
+    box-sizing: border-box;
+    overflow: hidden;
+    border: 2px solid #ff4fa3;
+    border-radius: 50% !important;
+    background: url("{% static 'images/logo.jpg' %}") center / cover no-repeat !important;
+    box-shadow: 0 0 14px rgba(255, 79, 163, 0.45);
+}
+
+        
 
         .brand-mascot {
             display: none;
@@ -262,6 +266,15 @@
             .header-actions .notification-link {
                 padding: 7px;
             }
+            
+.cartoon-brand-mark {
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    min-height: 40px !important;
+    flex: 0 0 40px;
+}
+
         }
     </style>
 </head>
