@@ -1773,3 +1773,195 @@ body.vibez-cartoon-theme > *:not(.cartoon-background) {
         animation: none !important;
     }
 }
+
+
+
+/* =========================================
+   .VibeZ CARTOON THEME
+   Uses the existing image filenames
+   ========================================= */
+
+body.vibez-cartoon-theme {
+    --vibez-bg: #100b20;
+    --vibez-panel: rgba(24, 15, 43, 0.91);
+    --vibez-pink: #ff4fa3;
+    --vibez-blue: #5bd9ff;
+    --vibez-purple: #a875ff;
+
+    color: #ffffff;
+    background-color: var(--vibez-bg);
+    background-image:
+        linear-gradient(
+            rgba(12, 7, 25, 0.78),
+            rgba(12, 7, 25, 0.91)
+        ),
+        url("../images/home_page.jpg");
+    background-position: center top;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    min-height: 100vh;
+}
+
+/* Keep the main content readable */
+body.vibez-cartoon-theme main,
+body.vibez-cartoon-theme .main-content {
+    position: relative;
+    z-index: 1;
+}
+
+/* Header and navigation */
+body.vibez-cartoon-theme header,
+body.vibez-cartoon-theme .site-header,
+body.vibez-cartoon-theme .navbar {
+    background: rgba(14, 8, 29, 0.94);
+    border-bottom: 1px solid rgba(168, 117, 255, 0.45);
+    backdrop-filter: blur(14px);
+}
+
+/* Logo image */
+body.vibez-cartoon-theme .cartoon-brand-mark {
+    display: inline-block;
+    width: 58px;
+    height: 58px;
+    flex-shrink: 0;
+    background-image: url("../images/logo.jpg");
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    border-radius: 14px;
+    box-shadow: 0 0 18px rgba(255, 79, 163, 0.3);
+}
+
+/* Hide the old emoji if the logo image is used */
+body.vibez-cartoon-theme .brand-mascot {
+    display: none;
+}
+
+/* Brand name */
+body.vibez-cartoon-theme .brand-wordmark {
+    color: #ffffff;
+    font-weight: 900;
+    letter-spacing: 1px;
+    text-shadow: 0 0 14px rgba(168, 117, 255, 0.7);
+}
+
+/* Panels and cards */
+body.vibez-cartoon-theme .card,
+body.vibez-cartoon-theme .panel,
+body.vibez-cartoon-theme .room-card,
+body.vibez-cartoon-theme .home-feature-card,
+body.vibez-cartoon-theme .cartoon-closing-cta {
+    background: var(--vibez-panel);
+    border: 1px solid rgba(168, 117, 255, 0.4);
+    border-radius: 20px;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(10px);
+}
+
+/* Home page hero */
+body.vibez-cartoon-theme .cartoon-hero {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255, 79, 163, 0.45);
+    border-radius: 26px;
+    background:
+        linear-gradient(
+            120deg,
+            rgba(19, 10, 39, 0.88),
+            rgba(54, 19, 78, 0.70)
+        ),
+        url("../images/home_page.jpg") center / cover no-repeat;
+    box-shadow: 0 0 35px rgba(168, 117, 255, 0.15);
+}
+
+/* Room page background */
+body.vibez-cartoon-theme .room-detail,
+body.vibez-cartoon-theme .room-detail-page,
+body.vibez-cartoon-theme .room-seats-section {
+    background-image:
+        linear-gradient(
+            rgba(12, 7, 25, 0.82),
+            rgba(12, 7, 25, 0.90)
+        ),
+        url("../images/chatroom_background.png");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    border-radius: 20px;
+}
+
+/* Buttons */
+body.vibez-cartoon-theme .btn,
+body.vibez-cartoon-theme button,
+body.vibez-cartoon-theme .button {
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+body.vibez-cartoon-theme .btn-primary,
+body.vibez-cartoon-theme .button-primary {
+    color: #ffffff;
+    background: linear-gradient(110deg, #8d55ff, #ff4fa3);
+    border: 0;
+    border-radius: 999px;
+    box-shadow: 0 4px 18px rgba(255, 79, 163, 0.22);
+}
+
+body.vibez-cartoon-theme .btn:hover,
+body.vibez-cartoon-theme button:hover,
+body.vibez-cartoon-theme .button:hover {
+    transform: translateY(-2px);
+}
+
+/* Text and links */
+body.vibez-cartoon-theme h1,
+body.vibez-cartoon-theme h2,
+body.vibez-cartoon-theme h3 {
+    color: #ffffff;
+}
+
+body.vibez-cartoon-theme a {
+    transition: color 0.2s ease;
+}
+
+body.vibez-cartoon-theme a:hover {
+    color: var(--vibez-blue);
+}
+
+/* Mobile bottom navigation */
+body.vibez-cartoon-theme .mobile-bottom-nav {
+    background: rgba(15, 8, 30, 0.97);
+    border-top: 1px solid rgba(168, 117, 255, 0.4);
+    backdrop-filter: blur(14px);
+}
+
+/* Mobile background compatibility */
+@media (max-width: 768px) {
+    body.vibez-cartoon-theme {
+        background-attachment: scroll;
+        background-position: center top;
+    }
+
+    body.vibez-cartoon-theme .cartoon-brand-mark {
+        width: 44px;
+        height: 44px;
+    }
+
+    body.vibez-cartoon-theme .cartoon-hero {
+        border-radius: 18px;
+        background-position: center;
+    }
+}
+
+/* Respect reduced-motion accessibility settings */
+@media (prefers-reduced-motion: reduce) {
+    body.vibez-cartoon-theme *,
+    body.vibez-cartoon-theme *::before,
+    body.vibez-cartoon-theme *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
