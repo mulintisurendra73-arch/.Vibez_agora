@@ -1349,3 +1349,427 @@ button {
         animation: none !important;
     }
 }
+
+
+
+/* ==========================================
+   .VibeZ CARTOON-INSPIRED PARTY THEME
+   Add at the end of static/css/site.css
+   ========================================== */
+
+body.vibez-cartoon-theme {
+    position: relative;
+    isolation: isolate;
+    background:
+        radial-gradient(ellipse at 12% 18%, rgba(135, 81, 221, 0.12), transparent 32%),
+        radial-gradient(ellipse at 90% 45%, rgba(255, 105, 190, 0.08), transparent 30%),
+        #101019;
+}
+
+/* Keep all page content above the decorative background */
+body.vibez-cartoon-theme > *:not(.cartoon-background) {
+    position: relative;
+    z-index: 1;
+}
+
+/* Decorative background layer */
+.cartoon-background {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+    user-select: none;
+}
+
+/* Soft neon orbs */
+.cartoon-glow {
+    position: absolute;
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+    filter: blur(65px);
+    opacity: 0.14;
+}
+
+.cartoon-glow-one {
+    top: 12%;
+    left: -150px;
+    background: #a88bff;
+}
+
+.cartoon-glow-two {
+    right: -160px;
+    top: 54%;
+    background: #ff91c8;
+}
+
+/* Cartoon-like orbit decorations */
+.cartoon-orbit {
+    position: absolute;
+    width: 280px;
+    height: 280px;
+    border: 1px solid rgba(168, 139, 255, 0.09);
+    border-radius: 48% 52% 60% 40%;
+}
+
+.cartoon-orbit-one {
+    top: 20%;
+    right: -190px;
+    transform: rotate(28deg);
+}
+
+.cartoon-orbit-two {
+    left: -210px;
+    bottom: 12%;
+    width: 330px;
+    height: 330px;
+    border-color: rgba(255, 145, 200, 0.08);
+    transform: rotate(-25deg);
+}
+
+/* Floating decorative stars */
+.cartoon-star {
+    position: absolute;
+    color: #d8b5ff;
+    text-shadow: 0 0 14px rgba(168, 139, 255, 0.65);
+    opacity: 0.48;
+    animation: vibez-star-float 5s ease-in-out infinite;
+}
+
+.cartoon-star-one {
+    top: 20%;
+    left: 8%;
+    font-size: 19px;
+}
+
+.cartoon-star-two {
+    top: 37%;
+    right: 8%;
+    font-size: 27px;
+    animation-delay: -1.5s;
+}
+
+.cartoon-star-three {
+    bottom: 24%;
+    left: 13%;
+    color: #ff91c8;
+    font-size: 22px;
+    animation-delay: -2.5s;
+}
+
+.cartoon-star-four {
+    bottom: 15%;
+    right: 12%;
+    font-size: 17px;
+    animation-delay: -3s;
+}
+
+@keyframes vibez-star-float {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-9px) rotate(12deg);
+    }
+}
+
+/* Themed .VibeZ logo */
+.cartoon-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    text-decoration: none;
+}
+
+.cartoon-brand-mark {
+    display: grid;
+    place-items: center;
+    width: 43px;
+    height: 43px;
+    flex: 0 0 43px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 14px;
+    background: linear-gradient(140deg, #d9b7ff, #ff9bce);
+    box-shadow:
+        0 0 22px rgba(168, 139, 255, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.brand-mascot {
+    font-size: 25px;
+    line-height: 1;
+    filter: drop-shadow(0 2px 2px rgba(40, 15, 55, 0.18));
+}
+
+.brand-wordmark {
+    color: #f7f5ff;
+    font-family: "Manrope", sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.9px;
+}
+
+.brand-z {
+    color: #ff91c8;
+    text-shadow: 0 0 15px rgba(255, 145, 200, 0.3);
+}
+
+.footer-brand .cartoon-brand-mark,
+.footer-brand .brand-mark {
+    width: 34px;
+    height: 34px;
+    flex-basis: 34px;
+    border-radius: 11px;
+}
+
+.footer-brand .brand-mascot {
+    font-size: 20px;
+}
+
+.footer-brand .brand-wordmark {
+    font-size: 17px;
+}
+
+/* Keep the header readable above the artwork */
+.topbar {
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+}
+
+/* Give cards a subtle party-room finish */
+.app-main .card,
+.app-main .room-card,
+.app-main .profile-card {
+    border-color: rgba(190, 160, 255, 0.14);
+}
+
+/* Mobile adjustments */
+@media (max-width: 640px) {
+    .cartoon-brand-mark {
+        width: 39px;
+        height: 39px;
+        flex-basis: 39px;
+        border-radius: 13px;
+    }
+
+    .brand-mascot {
+        font-size: 23px;
+    }
+
+    .brand-wordmark {
+        font-size: 19px;
+    }
+
+    .cartoon-glow {
+        width: 190px;
+        height: 190px;
+        filter: blur(50px);
+        opacity: 0.12;
+    }
+
+    .cartoon-orbit-one {
+        right: -235px;
+    }
+
+    .cartoon-orbit-two {
+        left: -260px;
+    }
+}
+
+/* Accessibility: respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    .cartoon-star {
+        animation: none !important;
+    }
+}
+
+
+
+/* ==========================================
+   VIBEZ CARTOON HOME PAGE
+   ========================================== */
+
+.vibez-home {
+    position: relative;
+    width: 100%;
+}
+
+.cartoon-hero {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+}
+
+.cartoon-hero::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: 4% 0;
+    border-radius: 32px;
+    background:
+        radial-gradient(ellipse at 82% 40%, rgba(168,139,255,.13), transparent 36%),
+        radial-gradient(ellipse at 92% 75%, rgba(255,145,200,.09), transparent 30%);
+    pointer-events: none;
+}
+
+.cartoon-hero-art {
+    position: relative;
+    isolation: isolate;
+}
+
+.cartoon-moon {
+    position: absolute;
+    z-index: -1;
+    width: 190px;
+    height: 190px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #ead9ff, #ad83ff 48%, #6545bd 100%);
+    box-shadow: 0 0 70px rgba(168,139,255,.32);
+}
+
+.cartoon-paw {
+    position: absolute;
+    z-index: 2;
+    color: #ffb3dc;
+    text-shadow: 0 0 18px rgba(255,145,200,.45);
+    font-size: 27px;
+    animation: vibez-star-float 5s ease-in-out infinite;
+}
+
+.paw-one {
+    top: 18%;
+    left: 17%;
+}
+
+.paw-two {
+    bottom: 18%;
+    right: 15%;
+    animation-delay: -2s;
+}
+
+.home-people-section,
+.home-feed-section {
+    margin-top: clamp(42px, 7vw, 82px);
+}
+
+.section-subtitle {
+    margin-top: 8px;
+    color: var(--muted, #aaa8bd);
+    line-height: 1.7;
+    max-width: 560px;
+}
+
+.home-feature-card {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    margin-top: 22px;
+    padding: clamp(22px, 4vw, 36px);
+    border: 1px solid rgba(190,160,255,.17);
+    border-radius: 25px;
+    background:
+        radial-gradient(ellipse at 100% 0%, rgba(168,139,255,.12), transparent 46%),
+        linear-gradient(135deg, rgba(31,29,48,.97), rgba(22,21,34,.97));
+    box-shadow: 0 18px 45px rgba(0,0,0,.13);
+}
+
+.feature-emoji {
+    display: grid;
+    place-items: center;
+    width: 76px;
+    height: 76px;
+    flex: 0 0 76px;
+    border-radius: 23px;
+    background: linear-gradient(140deg, #d9b7ff, #ff9bce);
+    font-size: 35px;
+    box-shadow: 0 0 30px rgba(168,139,255,.16);
+}
+
+.home-feature-card h3 {
+    margin: 0 0 9px;
+    color: var(--text, #f7f5ff);
+    font-family: "Manrope", sans-serif;
+    font-size: clamp(19px, 2.5vw, 25px);
+    line-height: 1.3;
+}
+
+.home-feature-card p {
+    margin: 0 0 18px;
+    color: var(--muted, #aaa8bd);
+    line-height: 1.7;
+    max-width: 620px;
+}
+
+.feed-feature-card {
+    background:
+        radial-gradient(ellipse at 0% 100%, rgba(255,145,200,.10), transparent 45%),
+        linear-gradient(135deg, rgba(31,29,48,.97), rgba(22,21,34,.97));
+}
+
+.cartoon-closing-cta {
+    position: relative;
+    overflow: hidden;
+    margin-top: clamp(44px, 7vw, 88px);
+}
+
+.cartoon-closing-cta::after {
+    content: "✧";
+    position: absolute;
+    right: 22px;
+    bottom: 8px;
+    color: rgba(255,145,200,.18);
+    font-size: 100px;
+    line-height: 1;
+    pointer-events: none;
+}
+
+@media (max-width: 640px) {
+    .cartoon-hero::before {
+        border-radius: 22px;
+    }
+
+    .home-feature-card {
+        align-items: flex-start;
+        gap: 15px;
+        padding: 20px;
+        border-radius: 21px;
+    }
+
+    .feature-emoji {
+        width: 54px;
+        height: 54px;
+        flex-basis: 54px;
+        border-radius: 17px;
+        font-size: 26px;
+    }
+
+    .home-feature-card h3 {
+        font-size: 18px;
+    }
+
+    .home-feature-card p {
+        font-size: 14px;
+    }
+
+    .home-feature-card .btn {
+        max-width: 100%;
+        white-space: normal;
+    }
+
+    .cartoon-closing-cta::after {
+        right: 10px;
+        font-size: 68px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .cartoon-paw {
+        animation: none !important;
+    }
+}
