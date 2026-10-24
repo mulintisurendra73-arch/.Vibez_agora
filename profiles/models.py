@@ -1,11 +1,18 @@
 from django.conf import settings
 from django.db import models
 
+from profiles.cloudinary_storage import ProfileImageStorage
+
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile")
     bio = models.CharField(max_length=280, blank=True)
     is_private = models.BooleanField(default=False, help_text="Only approved followers can view your full profile.")
-    avatar = models.ImageField(upload_to="profiles/", blank=True, null=True)
+    avatar = models.ImageField(
+    storage=ProfileImageStorage(),
+    upload_to="profiles/",
+    blank=True,
+    null=True,
+)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
