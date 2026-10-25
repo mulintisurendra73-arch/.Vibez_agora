@@ -1,11 +1,12 @@
+
 /* =========================================
-   .VibeZ — Clean responsive main stylesheet
+   .VibeZ — Consolidated responsive stylesheet
    Dark neon theme, circular logo, mobile layout
    ========================================= */
 
 :root {
     --bg: #100b20;
-    --panel: rgba(24, 15, 43, 0.92);
+    --panel: rgba(24, 15, 43, 0.94);
     --panel2: #202031;
     --text: #f7f5ff;
     --muted: #aaa8bd;
@@ -29,13 +30,11 @@ html {
 body {
     min-height: 100vh;
     margin: 0;
+    padding-bottom: env(safe-area-inset-bottom);
     color: var(--text);
     background-color: var(--bg);
     background-image:
-        linear-gradient(
-            rgba(12, 7, 25, 0.72),
-            rgba(12, 7, 25, 0.88)
-        ),
+        linear-gradient(rgba(12, 7, 25, 0.72), rgba(12, 7, 25, 0.88)),
         url("/static/images/home_page.jpg");
     background-position: center top;
     background-size: cover;
@@ -46,8 +45,8 @@ body {
 }
 
 body.vibez-cartoon-theme {
-    isolation: isolate;
     position: relative;
+    isolation: isolate;
 }
 
 a {
@@ -70,22 +69,20 @@ img {
     max-width: 100%;
 }
 
-/* =========================================
-   Header and branding
-   ========================================= */
+/* Header and branding */
 
 .topbar,
 .vibez-header {
-    min-height: 72px;
-    padding: 10px clamp(16px, 5vw, 80px);
+    position: relative;
+    z-index: 20;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 18px;
-    position: relative;
-    z-index: 20;
-    background: rgba(14, 8, 29, 0.94);
+    min-height: 72px;
+    padding: 10px clamp(16px, 5vw, 80px);
     border-bottom: 1px solid rgba(168, 117, 255, 0.35);
+    background: rgba(14, 8, 29, 0.94);
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
 }
@@ -94,8 +91,8 @@ img {
 .cartoon-brand {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
     flex-shrink: 0;
+    gap: 10px;
 }
 
 .brand {
@@ -105,18 +102,14 @@ img {
 
 .cartoon-brand-mark {
     display: block;
+    flex: 0 0 48px;
     width: 48px;
     height: 48px;
-    flex: 0 0 48px;
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 1;
     overflow: hidden;
     border: 2px solid var(--pink);
     border-radius: 50%;
-    background-color: #26153d;
-    background-image: url("/static/images/logo.jpg");
-    background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
+    background: #26153d url("/static/images/logo.jpg") center / cover no-repeat;
     box-shadow: 0 0 14px rgba(255, 79, 163, 0.3);
 }
 
@@ -124,9 +117,9 @@ img {
     display: block;
     width: 100%;
     height: 100%;
+    border-radius: 50%;
     object-fit: cover;
     object-position: center;
-    border-radius: 50%;
 }
 
 .brand-mascot {
@@ -135,9 +128,7 @@ img {
 
 .brand-wordmark {
     color: #fff;
-    font-family: "Manrope", sans-serif;
-    font-size: 20px;
-    font-weight: 900;
+    font: 900 20px "Manrope", sans-serif;
     letter-spacing: -0.5px;
     text-shadow: 0 0 14px rgba(168, 117, 255, 0.4);
 }
@@ -180,9 +171,7 @@ img {
     display: inline;
 }
 
-/* =========================================
-   Buttons
-   ========================================= */
+/* Buttons */
 
 .btn {
     display: inline-flex;
@@ -233,9 +222,7 @@ img {
     font-size: 13px;
 }
 
-/* =========================================
-   Homepage hero
-   ========================================= */
+/* Homepage hero */
 
 .vibez-home {
     width: 100%;
@@ -243,14 +230,14 @@ img {
 
 .hero,
 .cartoon-hero {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 75px clamp(24px, 7vw, 100px) 55px;
+    position: relative;
     display: grid;
     grid-template-columns: 1.08fr 0.92fr;
     align-items: center;
     gap: 36px;
-    position: relative;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 75px clamp(24px, 7vw, 100px) 55px;
     overflow: hidden;
 }
 
@@ -358,10 +345,10 @@ img {
 
 .hero-art,
 .cartoon-hero-art {
-    height: 390px;
     position: relative;
     display: grid;
     place-items: center;
+    height: 390px;
 }
 
 .cartoon-hero-art {
@@ -501,8 +488,8 @@ img {
 .cartoon-paw {
     z-index: 2;
     color: #ffb3dc;
-    text-shadow: 0 0 18px rgba(255, 145, 200, 0.45);
     font-size: 27px;
+    text-shadow: 0 0 18px rgba(255, 145, 200, 0.45);
     animation: vibez-float 5s ease-in-out infinite;
 }
 
@@ -514,9 +501,7 @@ img {
     50% { transform: translateY(-9px) rotate(12deg); }
 }
 
-/* =========================================
-   Optional stats strip
-   ========================================= */
+/* Stats strip */
 
 .stats-strip {
     display: flex;
@@ -542,9 +527,7 @@ img {
     font-size: 11px;
 }
 
-/* =========================================
-   Room directory
-   ========================================= */
+/* Room directory */
 
 .rooms-section {
     max-width: 1160px;
@@ -565,8 +548,7 @@ img {
     font-size: clamp(2rem, 4vw, 3rem);
 }
 
-.section-heading h2,
-.closing-cta h2 {
+.section-heading h2 {
     margin: 10px 0 0;
     font: 750 clamp(27px, 3vw, 38px)/1.2 "Manrope", sans-serif;
     letter-spacing: -1.4px;
@@ -681,38 +663,10 @@ img {
     padding: 10px 14px;
 }
 
-.closing-cta {
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1160px;
-    margin: 0 auto 60px;
-    padding: 36px 43px;
-    overflow: hidden;
-    border: 1px solid rgba(199, 174, 255, 0.18);
-    border-radius: 23px;
-    background: radial-gradient(ellipse at 12% 0%, #2d2444 0, transparent 55%), #171622;
-}
+/* Shared containers and discovery */
 
-.closing-cta p {
-    color: #aaa6bb;
-    font-size: 12px;
-}
-
-.cta-spark {
-    position: absolute;
-    top: 20px;
-    left: 49%;
-    color: #e3b8ff;
-    font-size: 23px;
-}
-
-/* =========================================
-   Shared page containers and discovery
-   ========================================= */
-
-.app-main {
+.app-main,
+.vibez-main {
     min-height: calc(100vh - 100px);
 }
 
@@ -820,9 +774,7 @@ img {
     border: 0;
 }
 
-/* =========================================
-   Profile
-   ========================================= */
+/* Profiles */
 
 .profile-card { text-align: center; }
 
@@ -931,9 +883,7 @@ img {
     resize: vertical;
 }
 
-/* =========================================
-   Authentication
-   ========================================= */
+/* Authentication */
 
 .auth-wrap {
     display: grid;
@@ -1126,9 +1076,7 @@ img {
     width: min(100%, 430px);
 }
 
-/* =========================================
-   Room stats and eight-seat layout
-   ========================================= */
+/* Room stats and eight-seat layout */
 
 .room-phase6 { width: min(100%, 900px); }
 
@@ -1203,7 +1151,10 @@ img {
     font-size: 23px;
 }
 
-.seat-card h3 { margin: 11px 0 4px; font-size: 14px; }
+.seat-card h3 {
+    margin: 11px 0 4px;
+    font-size: 14px;
+}
 
 .seat-username {
     margin: 2px 0 4px;
@@ -1242,9 +1193,7 @@ img {
     gap: 12px;
 }
 
-/* =========================================
-   Django messages
-   ========================================= */
+/* Django messages */
 
 .message-stack {
     max-width: 1160px;
@@ -1265,9 +1214,7 @@ img {
     color: #ff91c8;
 }
 
-/* =========================================
-   Cartoon-inspired background decorations
-   ========================================= */
+/* Background decorations */
 
 .cartoon-background {
     position: fixed;
@@ -1335,9 +1282,7 @@ img {
 .cartoon-star-three { bottom: 24%; left: 13%; color: var(--pink); font-size: 22px; animation-delay: -2.5s; }
 .cartoon-star-four { right: 12%; bottom: 15%; font-size: 17px; animation-delay: -3s; }
 
-/* =========================================
-   Mobile bottom navigation
-   ========================================= */
+/* Mobile bottom navigation */
 
 .mobile-bottom-nav { display: none; }
 
@@ -1356,9 +1301,7 @@ img {
     stroke-linejoin: round;
 }
 
-/* =========================================
-   Tablet layout
-   ========================================= */
+/* Tablet */
 
 @media (max-width: 900px) {
     .desktop-nav { gap: 18px; }
@@ -1366,11 +1309,15 @@ img {
     .hero,
     .cartoon-hero {
         grid-template-columns: 1fr .85fr;
-        padding-top: 60px;
         gap: 10px;
+        padding-top: 60px;
     }
 
-    .hero-art { transform: scale(.85); margin-inline: -30px; }
+    .hero-art {
+        margin-inline: -30px;
+        transform: scale(.85);
+    }
+
     .hero h1 { font-size: 52px; }
 
     .auth-wrap {
@@ -1379,29 +1326,24 @@ img {
     }
 
     .auth-aside h1 { font-size: 45px; }
-
-    .closing-cta { margin-inline: 22px; }
     .people-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-/* =========================================
-   Mobile layout
-   ========================================= */
+/* Mobile */
 
 @media (max-width: 700px) {
     body {
         background-attachment: scroll;
         background-position: center top;
-        padding-bottom: env(safe-area-inset-bottom);
     }
 
     .topbar,
     .vibez-header {
-        min-height: 60px;
-        padding: 8px 14px;
         position: sticky;
         top: 0;
         z-index: 100;
+        min-height: 60px;
+        padding: 8px 14px;
         background: rgba(16, 11, 32, .97);
     }
 
@@ -1414,9 +1356,9 @@ img {
     .brand-wordmark { font-size: 19px; }
 
     .cartoon-brand-mark {
+        flex-basis: 40px;
         width: 40px;
         height: 40px;
-        flex-basis: 40px;
     }
 
     .nav-actions,
@@ -1433,8 +1375,8 @@ img {
         display: flex;
         flex-direction: column;
         align-items: stretch;
-        padding: 45px 22px 25px;
         gap: 0;
+        padding: 45px 22px 25px;
     }
 
     .hero h1 {
@@ -1475,15 +1417,8 @@ img {
     .room-grid { grid-template-columns: 1fr; }
     .room-card { min-height: 195px; }
 
-    .closing-cta {
-        display: block;
-        margin: 0 20px 40px;
-        padding: 27px;
-    }
-
-    .closing-cta .btn { margin-top: 12px; }
-
-    .app-main {
+    .app-main,
+    .vibez-main {
         min-height: calc(100dvh - 100px);
         padding-bottom: calc(78px + env(safe-area-inset-bottom));
     }
@@ -1529,15 +1464,18 @@ img {
         padding: 42px 18px;
     }
 
-    .auth-aside h1 { margin: 15px 0; font-size: 42px; }
+    .auth-aside h1 {
+        margin: 15px 0;
+        font-size: 42px;
+    }
+
     .auth-quote { display: none; }
     .auth-aside > p { font-size: 12px; }
     .auth-card { padding: 27px 21px; }
     .register-wrap .auth-card { padding: 25px 20px; }
+
     .auth-single { justify-content: center; }
     .auth-single .auth-card { width: 100%; }
-
-    .search-form { padding-right: 0; }
 
     .people-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .person-card { padding: 16px 10px; }
@@ -1559,7 +1497,7 @@ img {
     .cartoon-orbit-two { left: -260px; }
 }
 
-/* Eight seats: four columns on phones, two rows for eight seats */
+/* Eight seats: four columns on phones */
 
 @media (max-width: 640px) {
     .seat-grid {
@@ -1605,12 +1543,6 @@ img {
         padding: 6px 4px;
         font-size: 9px;
     }
-
-    .cartoon-brand-mark {
-        width: 40px;
-        height: 40px;
-        flex-basis: 40px;
-    }
 }
 
 @media (max-width: 560px) {
@@ -1621,9 +1553,7 @@ img {
     .stats-strip { gap: 8px; }
 }
 
-/* =========================================
-   Accessibility
-   ========================================= */
+/* Accessibility */
 
 @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
